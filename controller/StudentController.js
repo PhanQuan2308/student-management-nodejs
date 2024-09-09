@@ -4,6 +4,12 @@ const db = require('../services/FirebaseService');
 exports.createStudent = async (req, res) => {
     try {
       const { name, age, className } = req.body;
+  
+      // Kiểm tra nếu một trong các trường bị thiếu
+      if (!name || !age || !className) {
+        return res.status(400).json({ error: 'Missing fields: name, age, or className' });
+      }
+  
       const newStudent = await db.collection('students').add({
         name,
         age,
@@ -11,12 +17,11 @@ exports.createStudent = async (req, res) => {
       });
       res.status(201).json({ id: newStudent.id, message: 'Student created successfully' });
     } catch (error) {
-      console.error('Error creating student:', error);  // Ghi log lỗi vào console để kiểm tra
+      console.error('Error creating student:', error);
       res.status(500).json({ error: 'Failed to create student' });
     }
   };
   
-
 // Lấy danh sách sinh viên
 exports.getStudents = async (req, res) => {
   try {
