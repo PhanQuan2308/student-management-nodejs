@@ -3,7 +3,7 @@ const studentRoutes = require('./routers/StudentRouters');
 const app = express();
 
 // Middleware để xử lý JSON
-app.use(express.json());
+app.use(express.json());  // Phải có dòng này
 
 // Sử dụng route /api/students
 app.use('/api', studentRoutes);

@@ -3,9 +3,10 @@ const db = require('../services/FirebaseService');
 // Thêm sinh viên mới
 exports.createStudent = async (req, res) => {
     try {
+      console.log(req.body);  // Kiểm tra dữ liệu nhận từ Postman
+  
       const { name, age, className } = req.body;
   
-      // Kiểm tra nếu một trong các trường bị thiếu
       if (!name || !age || !className) {
         return res.status(400).json({ error: 'Missing fields: name, age, or className' });
       }
