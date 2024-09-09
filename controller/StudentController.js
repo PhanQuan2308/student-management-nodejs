@@ -2,18 +2,20 @@ const db = require('../services/FirebaseService');
 
 // Thêm sinh viên mới
 exports.createStudent = async (req, res) => {
-  try {
-    const { name, age, className } = req.body;
-    const newStudent = await db.collection('students').add({
-      name,
-      age,
-      className,
-    });
-    res.status(201).json({ id: newStudent.id, message: 'Student created successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to create student' });
-  }
-};
+    try {
+      const { name, age, className } = req.body;
+      const newStudent = await db.collection('students').add({
+        name,
+        age,
+        className,
+      });
+      res.status(201).json({ id: newStudent.id, message: 'Student created successfully' });
+    } catch (error) {
+      console.error('Error creating student:', error);  // Ghi log lỗi vào console để kiểm tra
+      res.status(500).json({ error: 'Failed to create student' });
+    }
+  };
+  
 
 // Lấy danh sách sinh viên
 exports.getStudents = async (req, res) => {
