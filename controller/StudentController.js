@@ -1,10 +1,9 @@
 const db = require('../services/FirebaseService');
 
 // Thêm sinh viên mới
-// Thêm sinh viên mới
 exports.createStudent = async (req, res) => {
     try {
-      console.log(req.body);  // Kiểm tra dữ liệu nhận từ Postman
+      console.log(req.body);  // Kiểm tra dữ liệu nhận từ Postman để xem đúng định dạng không
   
       const { name, age, className } = req.body;
   
@@ -12,7 +11,6 @@ exports.createStudent = async (req, res) => {
         return res.status(400).json({ error: 'Missing fields: name, age, or className' });
       }
 
-      // Sử dụng await trong hàm async
       const newStudent = await db.collection('students').add({
         name,
         age,
