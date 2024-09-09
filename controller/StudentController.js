@@ -1,34 +1,46 @@
 const db = require('../services/FirebaseService');
 
 // Thêm sinh viên mới
-// Thêm sinh viên mới
-exports.createStudent = async (req, res) => {
+// Thêm sinh viên mớiexports.createStudent = async (req, res) => {
     try {
-      const student = req.body;  // Nhận dữ liệu từ request body
+        console.log(req.body);  // Kiểm tra dữ liệu nhận từ Postman
+        const { name, age, className } = req.body;
   
-      // Thêm student vào collection 'students'
-      const docRef = await db.collection('students').add(student);
-      
-      // Trả về kết quả thành công với ID của document vừa tạo
-      res.status(201).send({ id: docRef.id, message: 'Student created successfully' });
-    } catch (error) {
-      // Trả về lỗi nếu không thêm được sinh viên
-      res.status(500).send('Error creating student: ' + error.message);
-    }
-};
+        if (!name || !age || !className) {
+          return res.status(400).json({ error: 'Missing fields: name, age, or className' });
+        }
+  
+        // Thêm sinh viên vào Firestore
+        const newStudent = await db.collection('students').add({
+          name,
+          age,
+          className
+        });
+  
+        res.status(201).json({ id: newStudent.id, message: 'Student created successfully' });
+      } catch (error) {
+        console.error('Error creating student:', error);
+        res.status(500).json({ error: 'Failed to create student' });
+      }
+  };
+  
 
   
 // Lấy danh sách sinh viên
 exports.getStudents = async (req, res) => {
-  try {
-    const studentsRef = db.collection('students');
-    const snapshot = await studentsRef.get();
-    const students = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    res.status(200).json(students);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to retrieve students' });
-  }
-};
+    try {
+      const studentsRef = db.collection('students');
+      const snapshot = await studentsRef.get();
+  
+      // Kiểm tra xem snapshot có dữ liệu không và trả về toàn bộ dữ liệu (bao gồm cả các field)
+      const students = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  
+      res.status(200).json(students);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to retrieve students' });
+    }
+  };
+  
 
 // Lấy thông tin chi tiết sinh viên
 exports.getStudentById = async (req, res) => {
